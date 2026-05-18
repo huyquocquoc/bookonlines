@@ -11,8 +11,10 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatCardModule } from '@angular/material/card';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { FormsModule } from '@angular/forms';
 import { BookService } from '../../../core/services/book.service';
+import { CartService } from '../../../core/services/cart.service';
 import { Book } from '../../../core/models/book.model';
 import { BookFormComponent } from '../book-form/book-form.component';
 import { BookDeleteDialogComponent } from '../book-delete-dialog/book-delete-dialog.component';
@@ -32,6 +34,7 @@ import { BookDeleteDialogComponent } from '../book-delete-dialog/book-delete-dia
     MatCardModule,
     MatPaginatorModule,
     MatDialogModule,
+    MatSnackBarModule,
     FormsModule
   ],
   templateUrl: './book-list.component.html',
@@ -51,8 +54,10 @@ export class BookListComponent implements OnInit {
 
   constructor(
     private bookService: BookService,
+    private cartService: CartService,
     private router: Router,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
@@ -163,6 +168,35 @@ export class BookListComponent implements OnInit {
   goToPage(page: number): void {
     this.currentPage = page;
     this.loadBooks();
+  }
+
+  addToCart(book: Book): void {
+    const cartItem = {
+      bookId: book.id!,
+      bookTitle: book.title,
+      bookAuthor: book.author,
+      bookIsbn: book.isbn,
+      bookPrice: book.price,
+      quantity: 1
+    };
+
+    this.cartService.addToCart(cartItem).subscribe({
+      next: () => {
+        this.snackBar.open(`"${book.title}" added to cart!`, 'Close', {
+          duration: 3000,
+          horizontalPosition: 'end',
+          verticalPosition: 'top'
+        });
+      },
+      error: (error) => {
+        console.error('Error adding to cart:', error);
+        this.snackBar.open('Failed to add item to cart', 'Close', {
+          duration: 3000,
+          horizontalPosition: 'end',
+          verticalPosition: 'top'
+        });
+      }
+    });
   }
 }
 

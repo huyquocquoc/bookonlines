@@ -1,0 +1,96 @@
+.cart-button {
+  margin-left: 16px;
+}
+
+.cart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+}
+
+.cart-header h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.cart-content {
+  max-height: 400px;
+  overflow-y: auto;
+  min-width: 350px;
+}
+
+.empty-cart {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  color: #999;
+}
+
+.empty-cart mat-icon {
+  font-size: 64px;
+  width: 64px;
+  height: 64px;
+  margin-bottom: 16px;
+}
+
+.cart-item {
+  height: auto !important;
+  padding: 12px 16px !important;
+}
+
+.item-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 100%;
+  gap: 12px;
+}
+
+.item-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.item-details strong {
+  font-size: 14px;
+  color: #333;
+}
+
+.item-details small {
+  font-size: 12px;
+  color: #666;
+}
+
+.item-price {
+  font-size: 13px;
+  color: #1976d2;
+  margin-top: 4px;
+}
+
+.cart-footer {
+  padding: 16px;
+}
+
+.cart-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  font-size: 16px;
+}
+
+.checkout-button {
+  width: 100%;
+}
+
+::ng-deep .cart-menu .mat-mdc-menu-content {
+  padding: 0 !important;
+}
+
+/* Made with Bob */

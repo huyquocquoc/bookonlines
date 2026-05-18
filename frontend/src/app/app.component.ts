@@ -3,6 +3,7 @@ import { RouterOutlet } from '@angular/router';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { ShoppingCartComponent } from './shared/components/shopping-cart/shopping-cart.component';
 
 @Component({
   selector: 'app-root',
@@ -11,7 +12,8 @@ import { MatIconModule } from '@angular/material/icon';
     RouterOutlet,
     MatToolbarModule,
     MatButtonModule,
-    MatIconModule
+    MatIconModule,
+    ShoppingCartComponent
   ],
   template: `
     <mat-toolbar color="primary">
@@ -22,6 +24,7 @@ import { MatIconModule } from '@angular/material/icon';
         <mat-icon>list</mat-icon>
         Books
       </button>
+      <app-shopping-cart></app-shopping-cart>
     </mat-toolbar>
     
     <div class="container">

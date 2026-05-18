@@ -23,6 +23,7 @@
     <modules>
         <module>common</module>
         <module>book-service</module>
+        <module>cart-service</module>
         <module>inventory-service</module>
         <module>notification-service</module>
     </modules>

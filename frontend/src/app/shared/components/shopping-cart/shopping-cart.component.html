@@ -1,0 +1,52 @@
+<button mat-icon-button [matMenuTriggerFor]="cartMenu" class="cart-button">
+  <mat-icon [matBadge]="cartItemCount" [matBadgeHidden]="cartItemCount === 0" matBadgeColor="warn">
+    shopping_cart
+  </mat-icon>
+</button>
+
+<mat-menu #cartMenu="matMenu" class="cart-menu">
+  <div class="cart-header" (click)="$event.stopPropagation()">
+    <h3>Shopping Cart</h3>
+    <button mat-icon-button (click)="clearCart()" *ngIf="cart && cart.items.length > 0" matTooltip="Clear Cart">
+      <mat-icon>delete_sweep</mat-icon>
+    </button>
+  </div>
+
+  <mat-divider></mat-divider>
+
+  <div class="cart-content" (click)="$event.stopPropagation()">
+    <div *ngIf="!cart || cart.items.length === 0" class="empty-cart">
+      <mat-icon>shopping_cart</mat-icon>
+      <p>Your cart is empty</p>
+    </div>
+
+    <mat-list *ngIf="cart && cart.items.length > 0">
+      <mat-list-item *ngFor="let item of cart.items" class="cart-item">
+        <div class="item-content">
+          <div class="item-details">
+            <strong>{{ item.bookTitle }}</strong>
+            <small>by {{ item.bookAuthor }}</small>
+            <div class="item-price">
+              {{ item.bookPrice | currency }} x {{ item.quantity }} = {{ item.subtotal | currency }}
+            </div>
+          </div>
+          <button mat-icon-button color="warn" (click)="removeItem(item.id!)" matTooltip="Remove">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+      </mat-list-item>
+    </mat-list>
+  </div>
+
+  <mat-divider *ngIf="cart && cart.items.length > 0"></mat-divider>
+
+  <div class="cart-footer" *ngIf="cart && cart.items.length > 0" (click)="$event.stopPropagation()">
+    <div class="cart-total">
+      <strong>Total:</strong>
+      <strong>{{ cart.totalAmount | currency }}</strong>
+    </div>
+    <button mat-raised-button color="primary" class="checkout-button">
+      Checkout
+    </button>
+  </div>
+</mat-menu>
