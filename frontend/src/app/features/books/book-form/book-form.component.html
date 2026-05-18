@@ -1,0 +1,158 @@
+<div class="book-form-container">
+  <div *ngIf="loading" class="loading-container">
+    <mat-spinner></mat-spinner>
+    <p>Loading book details...</p>
+  </div>
+
+  <div *ngIf="!loading">
+    <div class="header">
+      <button mat-icon-button (click)="onCancel()">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <h1>{{ isEditMode ? 'Edit Book' : 'Add New Book' }}</h1>
+    </div>
+
+    <mat-card>
+      <mat-card-content>
+        <form [formGroup]="bookForm" (ngSubmit)="onSubmit()">
+          <div class="form-grid">
+            <!-- ISBN -->
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>ISBN</mat-label>
+              <input matInput formControlName="isbn" placeholder="Enter 10 or 13 digit ISBN">
+              <mat-icon matPrefix>tag</mat-icon>
+              <mat-error *ngIf="bookForm.get('isbn')?.hasError('required')">
+                ISBN is required
+              </mat-error>
+              <mat-error *ngIf="bookForm.get('isbn')?.hasError('pattern')">
+                ISBN must be 10 or 13 digits
+              </mat-error>
+            </mat-form-field>
+
+            <!-- Title -->
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Title</mat-label>
+              <input matInput formControlName="title" placeholder="Enter book title">
+              <mat-icon matPrefix>book</mat-icon>
+              <mat-error>{{ getErrorMessage('title') }}</mat-error>
+            </mat-form-field>
+
+            <!-- Author -->
+            <mat-form-field appearance="outline">
+              <mat-label>Author</mat-label>
+              <input matInput formControlName="author" placeholder="Enter author name">
+              <mat-icon matPrefix>person</mat-icon>
+              <mat-error>{{ getErrorMessage('author') }}</mat-error>
+            </mat-form-field>
+
+            <!-- Publisher -->
+            <mat-form-field appearance="outline">
+              <mat-label>Publisher</mat-label>
+              <input matInput formControlName="publisher" placeholder="Enter publisher name">
+              <mat-icon matPrefix>business</mat-icon>
+              <mat-error>{{ getErrorMessage('publisher') }}</mat-error>
+            </mat-form-field>
+
+            <!-- Category -->
+            <mat-form-field appearance="outline">
+              <mat-label>Category</mat-label>
+              <mat-select formControlName="category">
+                <mat-option *ngFor="let category of categories" [value]="category">
+                  {{ category }}
+                </mat-option>
+              </mat-select>
+              <mat-icon matPrefix>category</mat-icon>
+              <mat-error>{{ getErrorMessage('category') }}</mat-error>
+            </mat-form-field>
+
+            <!-- Language -->
+            <mat-form-field appearance="outline">
+              <mat-label>Language</mat-label>
+              <mat-select formControlName="language">
+                <mat-option *ngFor="let language of languages" [value]="language">
+                  {{ language }}
+                </mat-option>
+              </mat-select>
+              <mat-icon matPrefix>language</mat-icon>
+              <mat-error>{{ getErrorMessage('language') }}</mat-error>
+            </mat-form-field>
+
+            <!-- Price -->
+            <mat-form-field appearance="outline">
+              <mat-label>Price</mat-label>
+              <input matInput type="number" formControlName="price" placeholder="0.00" step="0.01">
+              <span matPrefix>$&nbsp;</span>
+              <mat-error>{{ getErrorMessage('price') }}</mat-error>
+            </mat-form-field>
+
+            <!-- Stock Quantity -->
+            <mat-form-field appearance="outline">
+              <mat-label>Stock Quantity</mat-label>
+              <input matInput type="number" formControlName="stockQuantity" placeholder="0">
+              <mat-icon matPrefix>inventory</mat-icon>
+              <mat-error>{{ getErrorMessage('stockQuantity') }}</mat-error>
+            </mat-form-field>
+
+            <!-- Published Date -->
+            <mat-form-field appearance="outline">
+              <mat-label>Published Date</mat-label>
+              <input matInput [matDatepicker]="picker" formControlName="publishedDate">
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+              <mat-icon matPrefix>calendar_today</mat-icon>
+            </mat-form-field>
+
+            <!-- Page Count -->
+            <mat-form-field appearance="outline">
+              <mat-label>Page Count</mat-label>
+              <input matInput type="number" formControlName="pageCount" placeholder="0">
+              <mat-icon matPrefix>description</mat-icon>
+              <mat-error>{{ getErrorMessage('pageCount') }}</mat-error>
+            </mat-form-field>
+
+            <!-- Rating -->
+            <mat-form-field appearance="outline">
+              <mat-label>Rating</mat-label>
+              <input matInput type="number" formControlName="rating" placeholder="0.0" step="0.1" min="0" max="5">
+              <mat-icon matPrefix>star</mat-icon>
+              <mat-error>{{ getErrorMessage('rating') }}</mat-error>
+              <mat-hint>Rating from 0 to 5</mat-hint>
+            </mat-form-field>
+
+            <!-- Cover Image URL -->
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Cover Image URL</mat-label>
+              <input matInput formControlName="coverImageUrl" placeholder="https://example.com/image.jpg">
+              <mat-icon matPrefix>image</mat-icon>
+              <mat-error>{{ getErrorMessage('coverImageUrl') }}</mat-error>
+            </mat-form-field>
+
+            <!-- Description -->
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Description</mat-label>
+              <textarea matInput formControlName="description" rows="5" placeholder="Enter book description"></textarea>
+              <mat-error>{{ getErrorMessage('description') }}</mat-error>
+            </mat-form-field>
+
+            <!-- Active Status -->
+            <div class="checkbox-field full-width">
+              <mat-checkbox formControlName="active">
+                Active (Available for sale)
+              </mat-checkbox>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button mat-raised-button type="button" (click)="onCancel()" [disabled]="submitting">
+              Cancel
+            </button>
+            <button mat-raised-button color="primary" type="submit" [disabled]="submitting || bookForm.invalid">
+              <mat-spinner *ngIf="submitting" diameter="20"></mat-spinner>
+              <span *ngIf="!submitting">{{ isEditMode ? 'Update Book' : 'Create Book' }}</span>
+            </button>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

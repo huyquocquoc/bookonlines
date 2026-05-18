@@ -1,0 +1,114 @@
+<div class="book-list-container">
+  <div class="header">
+    <h1>Books</h1>
+    <button mat-raised-button color="primary" (click)="addBook()">
+      <mat-icon>add</mat-icon>
+      Add Book
+    </button>
+  </div>
+
+  <mat-card class="search-card">
+    <mat-form-field class="search-field" appearance="outline">
+      <mat-label>Search books</mat-label>
+      <input 
+        matInput 
+        [(ngModel)]="searchQuery" 
+        (keyup.enter)="onSearch()" 
+        placeholder="Search by title, author, or ISBN">
+      <button mat-icon-button matSuffix (click)="onSearch()" *ngIf="searchQuery">
+        <mat-icon>search</mat-icon>
+      </button>
+      <button mat-icon-button matSuffix (click)="clearSearch()" *ngIf="searchQuery">
+        <mat-icon>clear</mat-icon>
+      </button>
+    </mat-form-field>
+  </mat-card>
+
+  <div *ngIf="loading" class="loading-container">
+    <mat-spinner></mat-spinner>
+    <p>Loading books...</p>
+  </div>
+
+  <div *ngIf="error" class="error-message">
+    <mat-icon>error</mat-icon>
+    {{ error }}
+  </div>
+
+  <div *ngIf="!loading && !error && books.length === 0" class="no-data">
+    <mat-icon>book</mat-icon>
+    <p>No books found</p>
+    <button mat-raised-button color="primary" (click)="addBook()">
+      Add Your First Book
+    </button>
+  </div>
+
+  <div *ngIf="!loading && !error && books.length > 0">
+    <cdk-virtual-scroll-viewport itemSize="60" class="book-viewport">
+      <table mat-table [dataSource]="books" class="books-table">
+        
+        <ng-container matColumnDef="title">
+          <th mat-header-cell *matHeaderCellDef>Title</th>
+          <td mat-cell *matCellDef="let book">
+            <strong>{{ book.title }}</strong>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="author">
+          <th mat-header-cell *matHeaderCellDef>Author</th>
+          <td mat-cell *matCellDef="let book">{{ book.author }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="isbn">
+          <th mat-header-cell *matHeaderCellDef>ISBN</th>
+          <td mat-cell *matCellDef="let book">{{ book.isbn }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="price">
+          <th mat-header-cell *matHeaderCellDef>Price</th>
+          <td mat-cell *matCellDef="let book">{{ book.price | currency }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="stockQuantity">
+          <th mat-header-cell *matHeaderCellDef>Stock</th>
+          <td mat-cell *matCellDef="let book">
+            <span [class.low-stock]="book.stockQuantity < 10">
+              {{ book.stockQuantity }}
+            </span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Actions</th>
+          <td mat-cell *matCellDef="let book">
+            <button mat-icon-button (click)="viewBook(book.id!)" matTooltip="View Details">
+              <mat-icon>visibility</mat-icon>
+            </button>
+            <button mat-icon-button (click)="editBook(book)" matTooltip="Edit">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button color="warn" (click)="deleteBook(book)" matTooltip="Delete">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="book-row"></tr>
+      </table>
+    </cdk-virtual-scroll-viewport>
+
+    <div class="pagination">
+      <button mat-button (click)="previousPage()" [disabled]="currentPage === 0">
+        <mat-icon>chevron_left</mat-icon>
+        Previous
+      </button>
+      <span class="page-info">
+        Page {{ currentPage + 1 }} of {{ totalPages }} ({{ totalElements }} total books)
+      </span>
+      <button mat-button (click)="nextPage()" [disabled]="currentPage >= totalPages - 1">
+        Next
+        <mat-icon>chevron_right</mat-icon>
+      </button>
+    </div>
+  </div>
+</div>

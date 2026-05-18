@@ -1,0 +1,119 @@
+<div class="book-detail-container">
+  <div *ngIf="loading" class="loading-container">
+    <mat-spinner></mat-spinner>
+    <p>Loading book details...</p>
+  </div>
+
+  <div *ngIf="error" class="error-message">
+    <mat-icon>error</mat-icon>
+    {{ error }}
+    <button mat-button (click)="goBack()">Go Back</button>
+  </div>
+
+  <div *ngIf="!loading && !error && book">
+    <div class="header">
+      <button mat-icon-button (click)="goBack()">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <h1>Book Details</h1>
+      <div class="actions">
+        <button mat-raised-button color="primary" (click)="editBook()">
+          <mat-icon>edit</mat-icon>
+          Edit
+        </button>
+        <button mat-raised-button color="warn" (click)="deleteBook()">
+          <mat-icon>delete</mat-icon>
+          Delete
+        </button>
+      </div>
+    </div>
+
+    <mat-card class="book-card">
+      <mat-card-content>
+        <div class="book-info">
+          <div class="book-image" *ngIf="book.coverImageUrl">
+            <img [src]="book.coverImageUrl" [alt]="book.title">
+          </div>
+          <div class="book-image placeholder" *ngIf="!book.coverImageUrl">
+            <mat-icon>book</mat-icon>
+          </div>
+
+          <div class="book-details">
+            <h2>{{ book.title }}</h2>
+            <p class="author">by {{ book.author }}</p>
+
+            <div class="info-grid">
+              <div class="info-item">
+                <span class="label">ISBN:</span>
+                <span class="value">{{ book.isbn }}</span>
+              </div>
+
+              <div class="info-item" *ngIf="book.publisher">
+                <span class="label">Publisher:</span>
+                <span class="value">{{ book.publisher }}</span>
+              </div>
+
+              <div class="info-item" *ngIf="book.category">
+                <span class="label">Category:</span>
+                <mat-chip>{{ book.category }}</mat-chip>
+              </div>
+
+              <div class="info-item" *ngIf="book.language">
+                <span class="label">Language:</span>
+                <span class="value">{{ book.language }}</span>
+              </div>
+
+              <div class="info-item">
+                <span class="label">Price:</span>
+                <span class="value price">{{ book.price | currency }}</span>
+              </div>
+
+              <div class="info-item">
+                <span class="label">Stock:</span>
+                <span class="value" [class.low-stock]="book.stockQuantity < 10">
+                  {{ book.stockQuantity }} units
+                </span>
+              </div>
+
+              <div class="info-item" *ngIf="book.publishedDate">
+                <span class="label">Published:</span>
+                <span class="value">{{ book.publishedDate | date }}</span>
+              </div>
+
+              <div class="info-item" *ngIf="book.pageCount">
+                <span class="label">Pages:</span>
+                <span class="value">{{ book.pageCount }}</span>
+              </div>
+
+              <div class="info-item" *ngIf="book.rating">
+                <span class="label">Rating:</span>
+                <span class="value">{{ book.rating }} / 5.0</span>
+              </div>
+
+              <div class="info-item">
+                <span class="label">Status:</span>
+                <mat-chip [class.active]="book.active" [class.inactive]="!book.active">
+                  {{ book.active ? 'Active' : 'Inactive' }}
+                </mat-chip>
+              </div>
+            </div>
+
+            <div class="description" *ngIf="book.description">
+              <h3>Description</h3>
+              <p>{{ book.description }}</p>
+            </div>
+
+            <div class="metadata" *ngIf="book.createdAt || book.updatedAt">
+              <p *ngIf="book.createdAt">
+                <small>Created: {{ book.createdAt | date:'medium' }}</small>
+              </p>
+              <p *ngIf="book.updatedAt">
+                <small>Last Updated: {{ book.updatedAt | date:'medium' }}</small>
+              </p>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

@@ -1,0 +1,22 @@
+<h2 mat-dialog-title>
+  <mat-icon color="warn">warning</mat-icon>
+  Confirm Delete
+</h2>
+
+<mat-dialog-content>
+  <p>Are you sure you want to delete this book?</p>
+  <div class="book-info" *ngIf="data.book">
+    <p><strong>Title:</strong> {{ data.book.title }}</p>
+    <p><strong>Author:</strong> {{ data.book.author }}</p>
+    <p><strong>ISBN:</strong> {{ data.book.isbn }}</p>
+  </div>
+  <p class="warning-text">This action cannot be undone.</p>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Cancel</button>
+  <button mat-raised-button color="warn" (click)="onConfirm()">
+    <mat-icon>delete</mat-icon>
+    Delete
+  </button>
+</mat-dialog-actions>

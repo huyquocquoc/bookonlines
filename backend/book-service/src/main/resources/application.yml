@@ -1,0 +1,127 @@
+spring:
+  application:
+    name: book-service
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+    deserialization:
+      fail-on-unknown-properties: false
+    default-property-inclusion: non_null
+  
+  # PostgreSQL Configuration
+  datasource:
+    url: jdbc:postgresql://192.168.1.88:5437/postgres
+    username: postgres
+    password: All4one7!
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+  
+  # JPA Configuration
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+        use_sql_comments: true
+    open-in-view: false
+  
+  # Redis Configuration
+  data:
+    redis:
+      host: 192.168.1.88
+      port: 30073
+      username: default
+      password: mypassword
+      timeout: 60000
+      jedis:
+        pool:
+          max-active: 8
+          max-idle: 8
+          min-idle: 0
+          max-wait: -1ms
+  
+  # Kafka Configuration
+  kafka:
+    bootstrap-servers: 192.168.1.88:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      acks: all
+      retries: 3
+      properties:
+        spring.json.add.type.headers: false
+    consumer:
+      group-id: book-service-group
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      auto-offset-reset: earliest
+      properties:
+        spring.json.trusted.packages: "*"
+
+# Server Configuration
+server:
+  port: 8081
+  servlet:
+    context-path: /
+  error:
+    include-message: always
+    include-binding-errors: always
+
+# Jackson Configuration for Java 8 Date/Time
+#spring:
+#  jackson:
+#    serialization:
+#      write-dates-as-timestamps: false
+#    deserialization:
+#      fail-on-unknown-properties: false
+#S    default-property-inclusion: non_null
+
+# Cache Configuration
+cache:
+  ttl: 3600  # 1 hour in seconds
+  
+# Kafka Topics
+kafka:
+  topic:
+    book-events: book-events
+
+# Pagination Configuration
+pagination:
+  default-page-size: 30
+  max-page-size: 100
+
+# Actuator Configuration
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      show-details: always
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+
+# Logging Configuration
+logging:
+  level:
+    com.bookstore: DEBUG
+    org.springframework.web: INFO
+    org.springframework.data: INFO
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+
+# Made with Bob
