@@ -93,6 +93,11 @@ kafka:
   topic:
     book-events: book-events
 
+# JWT Configuration
+jwt:
+  secret: bookstore-secret-key-for-jwt-token-generation-must-be-at-least-256-bits
+  expiration: 86400000  # 24 hours in milliseconds
+
 # Pagination Configuration
 pagination:
   default-page-size: 30
@@ -111,6 +116,8 @@ management:
     export:
       prometheus:
         enabled: true
+    tags:
+      application: ${spring.application.name}
 
 # Logging Configuration
 logging:

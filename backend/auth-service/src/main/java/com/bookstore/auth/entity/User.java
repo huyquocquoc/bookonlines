@@ -1,6 +1,5 @@
 package com.bookstore.auth.entity;
 
-import com.bookstore.common.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -46,10 +45,12 @@ public class User implements UserDetails {
     @Column(name = "last_name", nullable = false, length = 50)
     private String lastName;
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
-    @Enumerated(EnumType.STRING)
-    @Column(name = "role")
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+        name = "user_roles",
+        joinColumns = @JoinColumn(name = "user_id"),
+        inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
     @Builder.Default
     private Set<UserRole> roles = new HashSet<>();
 
@@ -70,7 +71,7 @@ public class User implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return roles.stream()
-                .map(role -> new SimpleGrantedAuthority("ROLE_" + role.name()))
+                .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getName()))
                 .collect(Collectors.toList());
     }
 

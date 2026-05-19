@@ -1,13 +1,14 @@
 package com.bookstore.auth.service;
 
 import com.bookstore.auth.entity.User;
+import com.bookstore.auth.entity.UserRole;
 import com.bookstore.auth.repository.UserRepository;
+import com.bookstore.auth.repository.UserRoleRepository;
 import com.bookstore.auth.security.JwtUtil;
 import com.bookstore.common.dto.AuthResponse;
 import com.bookstore.common.dto.LoginRequest;
 import com.bookstore.common.dto.SignupRequest;
 import com.bookstore.common.dto.UserDTO;
-import com.bookstore.common.enums.UserRole;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Service for authentication operations.
@@ -28,15 +30,20 @@ import java.util.Set;
 public class AuthService {
 
     private final UserRepository userRepository;
+    private static final String DEFAULT_ROLE_NAME = "USER_ROLE";
+
+    private final UserRoleRepository userRoleRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
     private final AuthenticationManager authenticationManager;
 
     public AuthService(UserRepository userRepository,
+                       UserRoleRepository userRoleRepository,
                        PasswordEncoder passwordEncoder,
                        JwtUtil jwtUtil,
                        AuthenticationManager authenticationManager) {
         this.userRepository = userRepository;
+        this.userRoleRepository = userRoleRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtUtil = jwtUtil;
         this.authenticationManager = authenticationManager;
@@ -50,8 +57,10 @@ public class AuthService {
             throw new RuntimeException("Email already registered: " + request.getEmail());
         }
 
+        UserRole userRole = getOrCreateDefaultUserRole();
+
         Set<UserRole> roles = new HashSet<>();
-        roles.add(UserRole.USER_ROLE);
+        roles.add(userRole);
 
         User savedUser = userRepository.save(User.builder()
                 .email(request.getEmail())
@@ -91,16 +100,28 @@ public class AuthService {
     }
 
     private UserDTO convertToDTO(User user) {
+        Set<String> roleNames = user.getRoles().stream()
+                .map(UserRole::getName)
+                .collect(Collectors.toSet());
+
         return UserDTO.builder()
                 .id(user.getId())
                 .email(user.getEmail())
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
-                .roles(user.getRoles())
+                .roles(roleNames)
                 .active(user.getActive())
                 .createdAt(user.getCreatedAt())
                 .updatedAt(user.getUpdatedAt())
                 .build();
+    }
+
+    private UserRole getOrCreateDefaultUserRole() {
+        return userRoleRepository.findByName(DEFAULT_ROLE_NAME)
+                .orElseGet(() -> userRoleRepository.save(UserRole.builder()
+                        .name(DEFAULT_ROLE_NAME)
+                        .description("Default user role")
+                        .build()));
     }
 }
 

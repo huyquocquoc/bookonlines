@@ -38,6 +38,7 @@
         <lombok.version>1.18.32</lombok.version>
         <postgresql.version>42.7.3</postgresql.version>
         <kafka.version>3.6.1</kafka.version>
+        <micrometer.version>1.12.5</micrometer.version>
     </properties>
 
     <dependencyManagement>
@@ -63,6 +64,13 @@
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
                 <version>${lombok.version}</version>
+            </dependency>
+
+            <!-- Micrometer Prometheus -->
+            <dependency>
+                <groupId>io.micrometer</groupId>
+                <artifactId>micrometer-registry-prometheus</artifactId>
+                <version>${micrometer.version}</version>
             </dependency>
 
             <!-- Common Module -->

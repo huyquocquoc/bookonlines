@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -103,8 +104,10 @@ public class BookController {
 
     /**
      * PUT /api/books/{id} - Update existing book
+     * Requires ADMIN_ROLE or DEV_ROLE
      */
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN_ROLE', 'ROLE_DEV_ROLE')")
     public ResponseEntity<ApiResponse<BookDTO>> updateBook(
             @PathVariable Long id,
             @Valid @RequestBody BookDTO bookDTO) {
@@ -116,8 +119,10 @@ public class BookController {
 
     /**
      * DELETE /api/books/{id} - Delete book (soft delete)
+     * Requires ADMIN_ROLE or DEV_ROLE
      */
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN_ROLE', 'ROLE_DEV_ROLE')")
     public ResponseEntity<ApiResponse<Void>> deleteBook(@PathVariable Long id) {
         log.info("DELETE /api/books/{}", id);
         bookService.deleteBook(id);
@@ -126,8 +131,10 @@ public class BookController {
 
     /**
      * DELETE /api/books/{id}/hard - Hard delete book (permanent)
+     * Requires ADMIN_ROLE or DEV_ROLE
      */
     @DeleteMapping("/{id}/hard")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN_ROLE', 'ROLE_DEV_ROLE')")
     public ResponseEntity<ApiResponse<Void>> hardDeleteBook(@PathVariable Long id) {
         log.info("DELETE /api/books/{}/hard", id);
         bookService.hardDeleteBook(id);

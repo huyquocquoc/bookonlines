@@ -1,0 +1,77 @@
+# Prometheus Configuration for Book Management System
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    cluster: 'bookstore-cluster'
+    environment: 'development'
+
+# Alertmanager configuration (optional)
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets: []
+          # - alertmanager:9093
+
+# Load rules once and periodically evaluate them
+rule_files:
+  # - "alerts/*.yml"
+
+# Scrape configurations
+scrape_configs:
+  # Prometheus self-monitoring
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  # Book Service
+  - job_name: 'book-service'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['host.docker.internal:8081']
+        labels:
+          application: 'book-service'
+          service: 'book-service'
+    scrape_interval: 10s
+
+  # Auth Service
+  - job_name: 'auth-service'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['host.docker.internal:8086']
+        labels:
+          application: 'auth-service'
+          service: 'auth-service'
+    scrape_interval: 10s
+
+  # Cart Service
+  - job_name: 'cart-service'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['host.docker.internal:8084']
+        labels:
+          application: 'cart-service'
+          service: 'cart-service'
+    scrape_interval: 10s
+
+  # Inventory Service
+  - job_name: 'inventory-service'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['host.docker.internal:8082']
+        labels:
+          application: 'inventory-service'
+          service: 'inventory-service'
+    scrape_interval: 10s
+
+  # Notification Service
+  - job_name: 'notification-service'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['host.docker.internal:8083']
+        labels:
+          application: 'notification-service'
+          service: 'notification-service'
+    scrape_interval: 10s
+
+# Made with Bob

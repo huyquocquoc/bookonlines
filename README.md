@@ -252,16 +252,53 @@ npm test
 npm run e2e
 ```
 
-## 📊 Monitoring
+## 📊 Monitoring & Observability
+
+The system includes comprehensive monitoring with **Prometheus** and **Grafana**.
+
+### Quick Start Monitoring
+
+```bash
+# Start Prometheus and Grafana
+docker-compose -f docker-compose-monitoring.yml up -d
+
+# Access monitoring tools
+# Prometheus: http://localhost:9090
+# Grafana: http://localhost:3000 (admin/admin)
+```
+
+### Available Dashboards
+
+- **Spring Boot Microservices Dashboard**: Pre-configured dashboard with:
+  - HTTP request rates and response times
+  - JVM memory and CPU usage
+  - Database connection pool metrics
+  - Thread counts and GC metrics
 
 ### Health Checks
-- Book Service: `http://localhost:8080/actuator/health`
-- Inventory Service: `http://localhost:8081/actuator/health`
-- Notification Service: `http://localhost:8082/actuator/health`
+- Book Service: `http://localhost:8081/actuator/health`
+- Auth Service: `http://localhost:8086/actuator/health`
+- Cart Service: `http://localhost:8084/actuator/health`
+- Inventory Service: `http://localhost:8082/actuator/health`
+- Notification Service: `http://localhost:8083/actuator/health`
 
-### Metrics
-- Actuator endpoints available at `/actuator/metrics`
-- Prometheus-compatible metrics
+### Prometheus Metrics
+All services expose Prometheus metrics at `/actuator/prometheus`:
+- `http://localhost:8081/actuator/prometheus` (Book Service)
+- `http://localhost:8086/actuator/prometheus` (Auth Service)
+- `http://localhost:8084/actuator/prometheus` (Cart Service)
+- `http://localhost:8082/actuator/prometheus` (Inventory Service)
+- `http://localhost:8083/actuator/prometheus` (Notification Service)
+
+### Key Metrics Monitored
+- HTTP request rate and latency
+- JVM memory usage (heap/non-heap)
+- CPU utilization (system/process)
+- Database connection pool status
+- Thread counts and states
+- Garbage collection metrics
+
+For detailed monitoring setup and configuration, see [MONITORING_GUIDE.md](MONITORING_GUIDE.md).
 
 ## 🔒 Security Considerations
 
@@ -302,6 +339,7 @@ npm run e2e
 
 - [Architecture Documentation](ARCHITECTURE.md) - Detailed system architecture
 - [Implementation Guide](IMPLEMENTATION_GUIDE.md) - Step-by-step implementation instructions
+- [Monitoring Guide](MONITORING_GUIDE.md) - Prometheus and Grafana setup and usage
 
 ## 🛠️ Technology Stack
 

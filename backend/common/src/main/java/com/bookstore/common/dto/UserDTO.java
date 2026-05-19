@@ -1,6 +1,5 @@
 package com.bookstore.common.dto;
 
-import com.bookstore.common.enums.UserRole;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -35,7 +34,7 @@ public class UserDTO {
     @Size(max = 50, message = "Last name must not exceed 50 characters")
     private String lastName;
 
-    private Set<UserRole> roles;
+    private Set<String> roles;
 
     private Boolean active;
 

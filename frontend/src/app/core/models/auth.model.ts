@@ -1,7 +1,6 @@
 export enum UserRole {
-  DEV_ROLE = 'DEV_ROLE',
-  USER_ROLE = 'USER_ROLE',
-  ADMIN_ROLE = 'ADMIN_ROLE'
+  USER_ROLE = 'USER_ROLE'
+  
 }
 
 export interface User {
