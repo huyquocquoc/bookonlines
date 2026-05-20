@@ -17,11 +17,17 @@
       </button>
       <h1>Book Details</h1>
       <div class="actions">
-        <button mat-raised-button color="primary" (click)="editBook()">
+        <button mat-raised-button color="primary" 
+                matTooltip="Edit this book"
+                matHint="May la thang ngu"
+                (click)="editBook()">
           <mat-icon>edit</mat-icon>
           Edit
         </button>
-        <button mat-raised-button color="warn" (click)="deleteBook()">
+
+        <button mat-raised-button color="warn"
+                matTooltip="Delete this book"
+                (click)="deleteBook()">
           <mat-icon>delete</mat-icon>
           Delete
         </button>

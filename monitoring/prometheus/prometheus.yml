@@ -17,6 +17,7 @@ alerting:
 rule_files:
   # - "alerts/*.yml"
 
+
 # Scrape configurations
 scrape_configs:
   # Prometheus self-monitoring
@@ -35,14 +36,14 @@ scrape_configs:
     scrape_interval: 10s
 
   # Auth Service
-  - job_name: 'auth-service'
-    metrics_path: '/actuator/prometheus'
-    static_configs:
-      - targets: ['host.docker.internal:8086']
-        labels:
-          application: 'auth-service'
-          service: 'auth-service'
-    scrape_interval: 10s
+  # - job_name: 'auth-service'
+  #   metrics_path: '/actuator/prometheus'
+  #   static_configs:
+  #     - targets: ['host.docker.internal:8086']
+  #       labels:
+  #         application: 'auth-service'
+  #         service: 'auth-service'
+  #   scrape_interval: 10s
 
   # Cart Service
   - job_name: 'cart-service'

@@ -1,11 +1,51 @@
 <div class="book-list-container">
-  <div class="header">
-    <h1>Books</h1>
+  <div class="layout-wrapper">
+    <!-- Left Sidebar Navigation -->
+    <aside class="sidebar">
+      <nav class="sidebar-nav">
+        <h3 class="nav-title">Menu</h3>
+        <ul class="nav-list">
+          <li class="nav-item active">
+            <a class="nav-link">
+              <mat-icon>library_books</mat-icon>
+              <span>Books</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/cart">
+              <mat-icon>shopping_cart</mat-icon>
+              <span>Shopping Cart</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link">
+              <mat-icon>analytics</mat-icon>
+              <span>Analytics</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link">
+              <mat-icon>settings</mat-icon>
+              <span>Settings</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+  <header class="page-header">
+    <div class="header-title">
+      <h1>Books</h1>
+      <p class="subtitle">Browse available titles, manage inventory, and keep your bookstore up to date.</p>
+    </div>
+
     <button mat-raised-button color="primary" (click)="addBook()">
       <mat-icon>add</mat-icon>
       Add Book
     </button>
-  </div>
+  </header>
 
   <mat-card class="search-card">
     <mat-form-field class="search-field" appearance="outline">
@@ -113,5 +153,17 @@
         <mat-icon>chevron_right</mat-icon>
       </button>
     </div>
+  </div>
+
+      <footer class="page-footer">
+    <div>
+      <strong>Book Management System</strong>
+      <span>— Your inventory and order dashboard in one place.</span>
+    </div>
+    <div class="footer-links">
+      <span>© {{ currentYear || '' }} Bookstore</span>
+    </div>
+      </footer>
+    </main>
   </div>
 </div>

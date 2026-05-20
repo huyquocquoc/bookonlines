@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
@@ -25,6 +25,7 @@ import { BookDeleteDialogComponent } from '../book-delete-dialog/book-delete-dia
   imports: [
     CommonModule,
     ScrollingModule,
+    RouterLink,
     MatTableModule,
     MatButtonModule,
     MatIconModule,
@@ -51,6 +52,7 @@ export class BookListComponent implements OnInit {
   totalPages = 0;
 
   displayedColumns: string[] = ['title', 'author', 'isbn', 'price', 'stockQuantity', 'actions'];
+  currentYear = new Date().getFullYear();
 
   constructor(
     private bookService: BookService,

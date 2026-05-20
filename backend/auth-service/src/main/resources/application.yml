@@ -35,8 +35,12 @@ management:
   endpoints:
     web:
       exposure:
-        include: health,info,metrics,prometheus
+        #include: health,info,metrics,prometheus
+        include: "*"
   endpoint:
+    prometheus:
+      access: unrestricted
+      enabled: true
     health:
       show-details: always
   metrics:

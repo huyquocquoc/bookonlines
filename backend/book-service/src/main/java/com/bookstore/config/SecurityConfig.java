@@ -36,6 +36,7 @@ public class SecurityConfig {
                         // Public endpoints - allow all
                         .requestMatchers(HttpMethod.GET, "/api/books/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/actuator/**").permitAll()
+                        .requestMatchers("/actuator/prometheus").permitAll()
                         
                         // POST /api/books - allow all (can be restricted later if needed)
                         .requestMatchers(HttpMethod.POST, "/api/books").permitAll()
