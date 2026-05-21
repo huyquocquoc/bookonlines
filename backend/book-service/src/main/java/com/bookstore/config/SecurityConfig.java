@@ -33,6 +33,11 @@ public class SecurityConfig {
                 
                 // Configure authorization rules
                 .authorizeHttpRequests(auth -> auth
+                        // Swagger/OpenAPI endpoints - allow all
+                        .requestMatchers("/swagger-ui/**", "/swagger-ui.html").permitAll()
+                        .requestMatchers("/v3/api-docs/**", "/api-docs/**").permitAll()
+                        .requestMatchers("/swagger-resources/**", "/webjars/**").permitAll()
+                        
                         // Public endpoints - allow all
                         .requestMatchers(HttpMethod.GET, "/api/books/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/actuator/**").permitAll()

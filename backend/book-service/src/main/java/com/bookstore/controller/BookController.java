@@ -3,6 +3,13 @@ package com.bookstore.controller;
 import com.bookstore.common.dto.BookDTO;
 import com.bookstore.common.response.ApiResponse;
 import com.bookstore.service.BookService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +27,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/books")
 @RequiredArgsConstructor
 @Slf4j
+@Tag(name = "Books", description = "Book management APIs")
 public class BookController {
 
     private final BookService bookService;
@@ -28,9 +36,22 @@ public class BookController {
      * GET /api/books - Get all books with pagination
      * Default page size: 30
      */
+    @Operation(
+        summary = "Get all books",
+        description = "Retrieve a paginated list of all active books in the system"
+    )
+    @ApiResponses(value = {
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "200",
+            description = "Successfully retrieved books",
+            content = @Content(schema = @Schema(implementation = ApiResponse.class))
+        )
+    })
     @GetMapping
     public ResponseEntity<ApiResponse<Page<BookDTO>>> getAllBooks(
+            @Parameter(description = "Page number (0-indexed)", example = "0")
             @RequestParam(defaultValue = "0") int page,
+            @Parameter(description = "Number of items per page", example = "30")
             @RequestParam(defaultValue = "30") int size) {
         
         log.info("GET /api/books - page: {}, size: {}", page, size);
