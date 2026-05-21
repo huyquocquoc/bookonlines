@@ -3,6 +3,8 @@ package com.bookstore.cart.controller;
 import com.bookstore.cart.service.CartService;
 import com.bookstore.common.dto.CartDTO;
 import com.bookstore.common.dto.CartItemDTO;
+import com.bookstore.common.dto.CheckoutSessionRequest;
+import com.bookstore.common.dto.CheckoutSessionResponse;
 import com.bookstore.common.response.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 public class CartController {
 
     private final CartService cartService;
+    private final com.bookstore.cart.service.StripeCheckoutService stripeCheckoutService;
 
     /**
      * Get or create cart by session ID
@@ -97,6 +100,23 @@ public class CartController {
         
         return ResponseEntity.ok(
                 ApiResponse.success(null, "Cart cleared successfully")
+        );
+    }
+
+    /**
+     * Create Stripe Checkout session for the current cart.
+     */
+    @PostMapping("/{sessionId}/checkout")
+    public ResponseEntity<ApiResponse<CheckoutSessionResponse>> createCheckoutSession(
+            @PathVariable String sessionId,
+            @RequestBody(required = false) CheckoutSessionRequest request) {
+        log.info("POST /api/cart/{}/checkout - Create Stripe Checkout session", sessionId);
+
+        CartDTO cart = cartService.getOrCreateCart(sessionId);
+        CheckoutSessionResponse response = stripeCheckoutService.createCheckoutSession(sessionId, cart, request);
+
+        return ResponseEntity.ok(
+                ApiResponse.success(response, "Stripe checkout session created successfully")
         );
     }
 

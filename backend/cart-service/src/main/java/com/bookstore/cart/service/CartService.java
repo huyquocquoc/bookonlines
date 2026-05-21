@@ -160,6 +160,20 @@ public class CartService {
     }
 
     /**
+     * Clear cart if it exists. Safe for webhook retries.
+     */
+    @Transactional
+    public void clearCartIfExists(String sessionId) {
+        log.info("Clearing cart if it exists for session: {}", sessionId);
+
+        cartRepository.findBySessionId(sessionId).ifPresent(cart -> {
+            cart.getItems().clear();
+            cart.recalculateTotals();
+            cartRepository.save(cart);
+        });
+    }
+
+    /**
      * Generate a new session ID
      */
     public String generateSessionId() {
