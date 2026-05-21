@@ -1,0 +1,101 @@
+filebeat.inputs:
+  - type: log
+    enabled: true
+    paths:
+      - /var/log/auth-service/*.log
+    fields:
+      service: auth-service
+      type: application
+    fields_under_root: true
+    json.keys_under_root: true
+    json.add_error_key: true
+    multiline.pattern: '^\d{4}-\d{2}-\d{2}'
+    multiline.negate: true
+    multiline.match: after
+
+  - type: log
+    enabled: true
+    paths:
+      - /var/log/book-service/*.log
+    fields:
+      service: book-service
+      type: application
+    fields_under_root: true
+    json.keys_under_root: true
+    json.add_error_key: true
+    multiline.pattern: '^\d{4}-\d{2}-\d{2}'
+    multiline.negate: true
+    multiline.match: after
+
+  - type: log
+    enabled: true
+    paths:
+      - /var/log/cart-service/*.log
+    fields:
+      service: cart-service
+      type: application
+    fields_under_root: true
+    json.keys_under_root: true
+    json.add_error_key: true
+    multiline.pattern: '^\d{4}-\d{2}-\d{2}'
+    multiline.negate: true
+    multiline.match: after
+
+  - type: log
+    enabled: true
+    paths:
+      - /var/log/inventory-service/*.log
+    fields:
+      service: inventory-service
+      type: application
+    fields_under_root: true
+    json.keys_under_root: true
+    json.add_error_key: true
+    multiline.pattern: '^\d{4}-\d{2}-\d{2}'
+    multiline.negate: true
+    multiline.match: after
+
+  - type: log
+    enabled: true
+    paths:
+      - /var/log/notification-service/*.log
+    fields:
+      service: notification-service
+      type: application
+    fields_under_root: true
+    json.keys_under_root: true
+    json.add_error_key: true
+    multiline.pattern: '^\d{4}-\d{2}-\d{2}'
+    multiline.negate: true
+    multiline.match: after
+
+# Processors
+processors:
+  - add_host_metadata:
+      when.not.contains.tags: forwarded
+  - add_cloud_metadata: ~
+  - add_docker_metadata: ~
+  - add_kubernetes_metadata: ~
+
+# Output to Logstash
+output.logstash:
+  hosts: ["logstash:5044"]
+  
+# Alternatively, output directly to Elasticsearch
+# output.elasticsearch:
+#   hosts: ["elasticsearch:9200"]
+#   index: "filebeat-%{[agent.version]}-%{+yyyy.MM.dd}"
+
+# Logging
+logging.level: info
+logging.to_files: true
+logging.files:
+  path: /var/log/filebeat
+  name: filebeat
+  keepfiles: 7
+  permissions: 0644
+
+# Monitoring
+monitoring.enabled: false
+
+# Made with Bob

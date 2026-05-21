@@ -45,8 +45,13 @@
       <strong>Total:</strong>
       <strong>{{ cart.totalAmount | currency }}</strong>
     </div>
-    <button mat-raised-button color="primary" class="checkout-button">
-      Checkout
+    <button
+      mat-raised-button
+      color="primary"
+      class="checkout-button"
+      [disabled]="checkoutInProgress"
+      (click)="checkout()">
+      {{ checkoutInProgress ? 'Redirecting...' : 'Checkout' }}
     </button>
   </div>
 </mat-menu>

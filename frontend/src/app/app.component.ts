@@ -9,6 +9,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { ShoppingCartComponent } from './shared/components/shopping-cart/shopping-cart.component';
 import { AuthService } from './core/services/auth.service';
 import { User } from './core/models/auth.model';
+import { CartService } from './core/services/cart.service';
 
 @Component({
   selector: 'app-root',
@@ -90,16 +91,40 @@ export class AppComponent implements OnInit {
   title = 'Book Management System';
   currentUser: User | null = null;
 
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private cartService: CartService
+  ) {}
 
   ngOnInit(): void {
     this.authService.currentUser$.subscribe(user => {
       this.currentUser = user;
     });
+
+    this.handleCheckoutReturn();
   }
 
   logout(): void {
     this.authService.logout();
+  }
+
+  private handleCheckoutReturn(): void {
+    const params = new URLSearchParams(window.location.search);
+    const checkoutState = params.get('checkout');
+
+    if (!checkoutState) {
+      return;
+    }
+
+    if (checkoutState === 'success') {
+      this.cartService.loadCart();
+      setTimeout(() => this.cartService.loadCart(), 1500);
+    }
+
+    params.delete('checkout');
+    const nextQuery = params.toString();
+    const nextUrl = `${window.location.pathname}${nextQuery ? `?${nextQuery}` : ''}${window.location.hash}`;
+    window.history.replaceState({}, '', nextUrl);
   }
 }
 

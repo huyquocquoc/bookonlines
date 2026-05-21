@@ -17,4 +17,14 @@ export interface Cart {
   totalItems: number;
 }
 
+export interface CheckoutSessionRequest {
+  successUrl?: string;
+  cancelUrl?: string;
+}
+
+export interface CheckoutSessionResponse {
+  sessionId: string;
+  checkoutUrl: string;
+}
+
 // Made with Bob

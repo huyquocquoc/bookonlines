@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
-import { Cart, CartItem } from '../models/cart.model';
+import { Cart, CartItem, CheckoutSessionRequest, CheckoutSessionResponse } from '../models/cart.model';
 import { ApiResponse } from '../models/book.model';
 
 @Injectable({
@@ -137,6 +137,15 @@ export class CartService {
     );
   }
 
+  createCheckoutSession(request: CheckoutSessionRequest): Observable<CheckoutSessionResponse> {
+    return this.http.post<ApiResponse<CheckoutSessionResponse>>(
+      `${this.apiUrl}/${this.sessionId}/checkout`,
+      request
+    ).pipe(
+      map(response => response.data)
+    );
+  }
+
   /**
    * Get current cart value
    */
@@ -150,6 +159,10 @@ export class CartService {
   getCartItemCount(): number {
     const cart = this.cartSubject.value;
     return cart ? cart.totalItems : 0;
+  }
+
+  getSessionId(): string {
+    return this.sessionId;
   }
 }
 

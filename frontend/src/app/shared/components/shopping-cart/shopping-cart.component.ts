@@ -6,6 +6,7 @@ import { MatBadgeModule } from '@angular/material/badge';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatListModule } from '@angular/material/list';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { CartService } from '../../../core/services/cart.service';
 import { Cart } from '../../../core/models/cart.model';
 
@@ -19,7 +20,8 @@ import { Cart } from '../../../core/models/cart.model';
     MatBadgeModule,
     MatMenuModule,
     MatListModule,
-    MatDividerModule
+    MatDividerModule,
+    MatTooltipModule
   ],
   templateUrl: './shopping-cart.component.html',
   styleUrls: ['./shopping-cart.component.css']
@@ -27,6 +29,7 @@ import { Cart } from '../../../core/models/cart.model';
 export class ShoppingCartComponent implements OnInit {
   cart: Cart | null = null;
   cartItemCount = 0;
+  checkoutInProgress = false;
 
   constructor(private cartService: CartService) {}
 
@@ -61,6 +64,29 @@ export class ShoppingCartComponent implements OnInit {
         }
       });
     }
+  }
+
+  checkout(): void {
+    if (!this.cart || this.cart.items.length === 0 || this.checkoutInProgress) {
+      return;
+    }
+
+    this.checkoutInProgress = true;
+
+    const origin = window.location.origin;
+    this.cartService.createCheckoutSession({
+      successUrl: `${origin}/?checkout=success`,
+      cancelUrl: `${origin}/?checkout=cancelled`
+    }).subscribe({
+      next: (response) => {
+        window.location.href = response.checkoutUrl;
+      },
+      error: (error) => {
+        this.checkoutInProgress = false;
+        console.error('Error creating checkout session:', error);
+        alert('Unable to start Stripe checkout. Please try again.');
+      }
+    });
   }
 }
 
